@@ -1,8 +1,8 @@
 <template>
-  <div id="post">
+  <div id="post" v-editable="blok">
     <div
-      class="post-thumbnail"
       :style="{ backgroundImage: 'url(' + image + ')' }"
+      class="post-thumbnail"
     ></div>
     <section class="post-content">
       <h1>{{ title }}</h1>
@@ -20,11 +20,20 @@ export default {
       })
       .then((res) => {
         return {
+          blok: res.data.story.content,
           image: res.data.story.content.thumbnail,
           title: res.data.story.content.title,
           content: res.data.story.content.content
         }
       })
+  },
+  mounted() {
+    if (typeof this.$storyblok !== 'undefined') {
+      this.$storyblok.init()
+      this.$storyblok.on('change', () => {
+        location.reload(true)
+      })
+    }
   }
 }
 </script>
